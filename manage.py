@@ -13,21 +13,21 @@ manager = Manager(app)
 @manager.command
 def createdb():
     """Creates the db tables."""
-    from app.db.DBConnection import Connection
+    from app.db import conn
     try:
-        cur = Connection.conn.cursor()
+        cur = conn.cursor()
 
         cur.execute(
             "CREATE TABLE users (ssn INTEGER PRIMARY KEY,first_name VARCHAR(255) NOT NULL,last_name VARCHAR(255) NOT NULL,user_name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL)")
 
-        Connection.conn.commit()
+        conn.commit()
         cur.close()
-        Connection.conn.close()
+        conn.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
-        if Connection.conn is not None:
-            Connection.conn.close()
+        if conn is not None:
+            conn.close()
 
 
 @manager.command
@@ -38,10 +38,10 @@ def dropdb():
 
 @manager.command
 def fakedata():
-    from app.db.models import EUsers
-    from app.db.queries import FUsers
+    from app.db.models.user import UserModel
+    from app.db.queries.user import UserQueries
 
-    user = EUsers()
+    user = UserModel()
 
     user.ssn = "1111234"
     user.username = "test_username"
@@ -50,7 +50,7 @@ def fakedata():
     user.lastname = "test_lasname"
     user.description = "test_description"
 
-    FUsers.insert(user)
+    UserQueries.insert(user)
 
     #rows = FUsers.select()
     """
