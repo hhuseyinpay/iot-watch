@@ -140,10 +140,14 @@ def fakedata():
 
 
 @manager.command
-def get():
+def test():
     from app.db.queries.user import UserQueries
+    from app.db.models.user import UserModel
 
-    print(UserQueries.get_user(1111).firstname)
+    # print(UserQueries.get_user(1111).firstname)
+
+    UserQueries.insert(
+        UserModel(12345, "deneme first", "last deneme", "biraz uzun lazım", "123412344", "açıklama yok birader"))
 
 
 if __name__ == '__main__':

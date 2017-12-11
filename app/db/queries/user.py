@@ -18,10 +18,14 @@ class UserQueries:
     def insert(user):
         cur = conn.cursor()
         try:
+            """
             cur.execute(
                 "INSERT INTO USERS (ssn, first_name, last_name, user_name, password, description) \
                   VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" %
                 (user.ssn, user.firstname, user.lastname, user.username, user.password, user.description))
+            """
+            cur.callproc('public.insert_user',
+                         [user.ssn, user.firstname, user.lastname, user.username, user.password, user.description])
         except psycopg2.Error as e:
             print(e)
         conn.commit()
@@ -31,7 +35,7 @@ class UserQueries:
     def get_user(ssn):
         cur = conn.cursor()
 
-        #cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
+        # cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
 
         cur.callproc('public.get_user', [ssn])
         row = cur.fetchone()
