@@ -52,7 +52,7 @@ def fakedata():
 
     UserQueries.insert(user)
 
-    #rows = FUsers.select()
+    # rows = FUsers.select()
     """
     for row in rows:
         print("SSN = ", row[0])
@@ -62,6 +62,7 @@ def fakedata():
         print("PASSWORD = ", row[4])
         print("DESCRIPTON = ", row[5], "\n")
     """
+
 
 if __name__ == '__main__':
     manager.run()

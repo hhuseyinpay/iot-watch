@@ -1,0 +1,170 @@
+{% extends "bootstrap/base.html" %}
+
+
+{% block head %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+{% endblock %}
+
+
+<title>Google Charts with Flask</title>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+      // Load the Visualization API and the ColumnChart package.
+      google.load('visualization', '1', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create our data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Time of Day');
+        data.addColumn('number', 'Temp');
+        data.addColumn('number', 'Humidity');
+        data.addColumn('number', 'Light');
+
+        data.addRows([
+                // Instead of plugging in the values manually, or reading them
+                // from a Data Source like Google Spreadsheets, feed them in
+                // using Jinja, the templating system Flask uses.
+                // Each iteration evaluates to something like this:
+                // ['Saturday', 28],
+                {%- for date, temp, humidity, light in data %}
+                [{{ date }}, {{ temp }},{{humidity}},{{light}}],
+                {%- endfor %}
+        ]);
+
+        // Instantiate and draw our chart, passing in some options.  All the
+        // options go into a single {}; some options' values go into a nested
+        // {}. Some values, such as colors, must be given as strings.  The
+        // Google Charts API is well-documented.
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, { vAxis: {baseline: 0}});
+      }
+
+
+
+
+
+</script>
+
+<!-- <style>
+    #content {
+        width: 80%;
+        height: 60%;
+        min-width: 800px;
+
+        /* Center the div. */
+        margin-right: auto;
+        margin-left: auto;
+
+        color: #C05;
+        text-align: center;
+    }
+
+    #chart_div {
+        min-height: 400px;
+    }
+</style> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron" style="padding-top: 10px; padding-bottom: 10px; padding-left: 30px;">
+    <h3>Environment Watch</h3>
+    <p>A simple example of IoT for tracking environmental data over time.</p>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-3">
+
+        <div class="form-group" style="margin-bottom: 20px">
+            <label for="devicesMenu">Current device:</label>
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true" style="width: 185px">
+                    @Model.TypeName
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                    {%- for item in devices %}
+                    <li><a href="{{ url_for('main.login') }}"> {{ item.Name }} </a></li>
+                    {%- endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px">
+            <label for="locationsMenu">Set location:</label> <a href="{{ url_for('main.login') }}">Add</a>
+            <div class=" dropdown">
+                <button class="btn btn-info dropdown-toggle" type="button" id="locationsMenu" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true" style="width: 185px">
+                    @Model.LocationName
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                    @foreach (var item in Model.Locations)
+                    {
+                    <li><a href="{{ url_for('main.login') }}">@item.Name</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 35px">
+            <label>Last local IP:</label>
+            <div class="dropdown">
+                <a href="http://{{ devices.LocalIp}}" target="_blank" class="btn btn-default" role="button"
+                   style="width: 185px;">{{ devices.LocalIp}}</a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Last measurements:</label><br/>
+            <div class="dropdown">
+                <div class="alert alert-info"
+                     style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
+                    @Model.LastSet.TempString &deg; fahrenheit
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="alert alert-danger"
+                     style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
+                    @Model.LastSet.HumidString % humidity
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="alert alert-warning"
+                     style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
+                    @Model.LastSet.LightString
+                    % light
+                </div>
+            </div>
+            <span style="font-style: italic">As of @Model.LastSet.DateOnlyString @Model.LastSet.TimeOnlyString</span>
+        </div>
+
+    </div>
+    <div class="col-lg-9">
+        <h1>IOTWATCH VALUES</h1>
+        <div id="chart_div"></div>
+    </div>
+</div>
+
+
+<!-- Include more content here or below the chart, using Flask / Jinja.
+<div id="content">
+    <h1>IOTWATCH VALUES</h1>
+    <div id="chart_div"></div>
+</div>
+-->
+{% endblock %}

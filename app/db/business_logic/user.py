@@ -7,9 +7,13 @@ class UserBusinessLogic:
         return UserQueries.select()
 
     @staticmethod
-    def insert(user):
+    def create(user):
         if 16 > len(user.username) > 5:
             UserQueries.insert(user)
             return None
         else:
             return "user name length must be between 5 and 16"
+
+    @staticmethod
+    def get_user(ssn):
+        return UserQueries.get_user(ssn)
