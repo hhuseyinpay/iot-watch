@@ -66,7 +66,7 @@ def index():
             ('Date(2016,12,15,10,30,0,0)', 76.9, 58.0, 21.0), ('Date(2016,11,15,11,30,0,0)', 82.9, 32.0, 48.0),
             ('Date(2016,12,15,10,30,0,0)', 99.9, 51.0, 45.0), ('Date(2016,11,15,11,30,0,0)', 6.9, 3.0, 41.0)
             ]
-    devices = []
+    devices = ["Deneme1","Deneme2"]
     return render_template('index.html', data=data, devices=devices)
 
 
@@ -88,7 +88,7 @@ def login():
 
 
 @main.route("/signup", methods=['GET', 'POST'])
-@login_required
+#@login_required
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():

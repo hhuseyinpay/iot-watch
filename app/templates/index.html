@@ -6,7 +6,7 @@
 {{super()}}
 <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
 {% endblock %}
 
 
@@ -79,26 +79,40 @@
 
 {% block content %}
 
-<div class="jumbotron" style="padding-top: 10px; padding-bottom: 10px; padding-left: 30px;">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">IotWatch</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/">Home</a></li>
+      <li><a href="/signup">Signup</a></li>
+      <li><a href="/login">Login</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="jumbotron" style="padding-top: 1px; padding-bottom: 10px; padding-left: 30px;">
     <h3>Environment Watch</h3>
     <p>A simple example of IoT for tracking environmental data over time.</p>
 </div>
 
 
 <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-3" style="padding-left: 30px;">
 
         <div class="form-group" style="margin-bottom: 20px">
-            <label for="devicesMenu">Current device:</label>
+            <label for="devices Menu">Current device:</label>
             <div class="dropdown">
                 <button class="btn btn-success dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true" style="width: 185px">
-                    @Model.TypeName
+                    Veritabanından
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
                     {%- for item in devices %}
-                    <li><a href="{{ url_for('main.login') }}"> {{ item.Name }} </a></li>
+                    <li><a href="{{ url_for('main.login') }}"> {{ item }} </a></li>
                     {%- endfor %}
                 </ul>
             </div>
@@ -109,16 +123,17 @@
             <div class=" dropdown">
                 <button class="btn btn-info dropdown-toggle" type="button" id="locationsMenu" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true" style="width: 185px">
-                    @Model.LocationName
+                    Veritabanından
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                    @foreach (var item in Model.Locations)
-                    {
+
                     <li><a href="{{ url_for('main.login') }}">@item.Name</a></li>
-                    }
+
                 </ul>
             </div>
+
+
         </div>
 
         <div class="form-group" style="margin-bottom: 35px">
@@ -134,29 +149,31 @@
             <div class="dropdown">
                 <div class="alert alert-info"
                      style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
-                    @Model.LastSet.TempString &deg; fahrenheit
+                    Veritabanından çekilecek
                 </div>
             </div>
             <div class="dropdown">
                 <div class="alert alert-danger"
                      style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
-                    @Model.LastSet.HumidString % humidity
+                    Veritabanından çekilecek
                 </div>
             </div>
             <div class="dropdown">
                 <div class="alert alert-warning"
                      style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
-                    @Model.LastSet.LightString
-                    % light
+                    Veritabanından çekilecek
                 </div>
             </div>
-            <span style="font-style: italic">As of @Model.LastSet.DateOnlyString @Model.LastSet.TimeOnlyString</span>
+            <span style="font-style: italic">Tarih</span>
         </div>
 
     </div>
-    <div class="col-lg-9">
+    <!--<div class="col-lg-9" style="margin-bottom: 15px; padding-left: 25px; text-align: center">
         <h1>IOTWATCH VALUES</h1>
         <div id="chart_div"></div>
+    </div>-->
+   <div class="col-lg-9">
+        <div id="chart_div" style="width: 100%; min-height: 400px"></div>
     </div>
 </div>
 
