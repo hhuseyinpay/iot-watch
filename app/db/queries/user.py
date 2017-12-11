@@ -31,7 +31,9 @@ class UserQueries:
     def get_user(ssn):
         cur = conn.cursor()
 
-        cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
+        #cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
+
+        cur.callproc('public.get_user', [ssn])
         row = cur.fetchone()
         cur.close()
 
