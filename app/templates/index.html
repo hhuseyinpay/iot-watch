@@ -10,7 +10,13 @@
 {% endblock %}
 
 
-<title>Google Charts with Flask</title>
+
+
+<meta id="my-data" data-name="{{name}}">
+
+
+
+<title>IOT Watch</title>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
 
@@ -28,9 +34,11 @@
         // Create our data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Time of Day');
-        data.addColumn('number', 'Temp');
-        data.addColumn('number', 'Humidity');
-        data.addColumn('number', 'Light');
+        data.addColumn('number','{{meas_type}}');
+
+
+    //Do something
+
 
         data.addRows([
                 // Instead of plugging in the values manually, or reading them
@@ -38,9 +46,13 @@
                 // using Jinja, the templating system Flask uses.
                 // Each iteration evaluates to something like this:
                 // ['Saturday', 28],
-                {%- for date, temp, humidity, light in data %}
-                [{{ date }}, {{ temp }},{{humidity}},{{light}}],
+
+              {%- for date,value in data %}
+                  [{{ date }}, {{ value }}],
                 {%- endfor %}
+
+
+
         ]);
 
         // Instantiate and draw our chart, passing in some options.  All the
@@ -50,7 +62,6 @@
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         chart.draw(data, { vAxis: {baseline: 0}});
       }
-
 
 
 
@@ -76,6 +87,7 @@
     }
 </style> -->
 {% endblock %}
+
 
 {% block content %}
 
@@ -103,32 +115,34 @@
     <div class="col-lg-3" style="padding-left: 30px;">
 
         <div class="form-group" style="margin-bottom: 20px">
-            <label for="devices Menu">Current device:</label>
+            <label for="devices Menu">Set Location:</label>
             <div class="dropdown">
                 <button class="btn btn-success dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true" style="width: 185px">
-                    Veritabanından
+                    Choose a Location
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                    {%- for item in devices %}
-                    <li><a href="{{ url_for('main.login') }}"> {{ item }} </a></li>
+                    {%- for item in locations %}
+                    <li><a href="{{ url_for('main.index') }}"> {{ item }} </a></li>
                     {%- endfor %}
                 </ul>
             </div>
         </div>
 
         <div class="form-group" style="margin-bottom: 20px">
-            <label for="locationsMenu">Set location:</label> <a href="{{ url_for('main.login') }}">Add</a>
+            <label for="locationsMenu">Set Device:</label>
             <div class=" dropdown">
                 <button class="btn btn-info dropdown-toggle" type="button" id="locationsMenu" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true" style="width: 185px">
-                    Veritabanından
+                    Choose a Device
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-
-                    <li><a href="{{ url_for('main.login') }}">@item.Name</a></li>
+                  <!-- LOCATION CLASS'I OLUŞTURULDUKTAN SONRA item.name ŞEKLİNE ÇEVİR!-->
+                  {%- for item in devices %}
+                  <li><a href="{{ url_for('main.index') }}"> {{ item }} </a></li>
+                  {%- endfor %}
 
                 </ul>
             </div>
@@ -139,32 +153,31 @@
         <div class="form-group" style="margin-bottom: 35px">
             <label>Last local IP:</label>
             <div class="dropdown">
-                <a href="http://{{ devices.LocalIp}}" target="_blank" class="btn btn-default" role="button"
-                   style="width: 185px;">{{ devices.LocalIp}}</a>
+                <a href="http://{{ last_local_ip}}" class="btn btn-default" role="button"
+                   style="width: 185px;">{{ last_local_ip}}</a>
             </div>
         </div>
 
         <div class="form-group">
-            <label>Last measurements:</label><br/>
+            <label>Last measurement:</label><br/>
             <div class="dropdown">
                 <div class="alert alert-info"
                      style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
-                    Veritabanından çekilecek
+                    {{last_meas}}
                 </div>
             </div>
-            <div class="dropdown">
+            <!--<div class="dropdown">
                 <div class="alert alert-danger"
                      style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
-                    Veritabanından çekilecek
+                    {{humidity_last_meas}}% Humidity
                 </div>
             </div>
             <div class="dropdown">
                 <div class="alert alert-warning"
                      style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">
-                    Veritabanından çekilecek
+                    {{light_last_meas}}% Light
                 </div>
-            </div>
-            <span style="font-style: italic">Tarih</span>
+            </div>-->
         </div>
 
     </div>
