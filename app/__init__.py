@@ -1,14 +1,18 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager
 from app.db.queries.user import UserQueries
+from app.db.queries.admin import AdminQueries
 
 login_manager = LoginManager()
 
 
 @login_manager.user_loader
 def load_user(ssn):
+    admin = AdminQueries.get_admin(ssn)
+    if admin is not None:
+        return admin
     return UserQueries.get_user(ssn)
 
 

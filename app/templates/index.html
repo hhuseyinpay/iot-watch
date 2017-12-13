@@ -9,7 +9,9 @@
 <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
 {% endblock %}
 
-
+{% if admin is defined %}
+    value of variable: {{ admin }}
+{% endif %}
 
 
 <meta id="my-data" data-name="{{name}}">
@@ -100,6 +102,7 @@
       <li class="active"><a href="/">Home</a></li>
       <li><a href="/signup">Signup</a></li>
       <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
     </ul>
   </div>
 </nav>

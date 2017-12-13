@@ -1,12 +1,12 @@
 from app.db import conn
-from ..models.user import UserModel
+from ..models.admin import AdminModel
 import psycopg2
 
 
-class UserQueries:
+class AdminQueries:
 
     @staticmethod
-    def insert(user):
+    def insert(admin):
         cur = conn.cursor()
         try:
             """
@@ -15,24 +15,25 @@ class UserQueries:
                   VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" %
                 (user.ssn, user.firstname, user.lastname, user.username, user.password, user.description))
             """
-            cur.callproc('public.insert_user',
-                         [user.ssn, user.firstname, user.lastname, user.username, user.password, user.description])
+            cur.callproc('public.insert_admin',
+                         [admin.ssn, admin.firstname, admin.lastname, admin.username, admin.password,
+                          admin.description])
         except psycopg2.Error as e:
             print(e)
         conn.commit()
         cur.close()
 
     @staticmethod
-    def get_user(ssn):
+    def get_admin(ssn):
         cur = conn.cursor()
 
         # cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
 
-        cur.callproc('public.get_user', [ssn])
+        cur.callproc('public.get_admin', [ssn])
         row = cur.fetchone()
         cur.close()
 
         if row:
-            return UserModel(row[0], row[1], row[2], row[3], row[4], row[5])
+            return AdminModel(row[0], row[1], row[2], row[3], row[4], row[5])
         else:
             return None

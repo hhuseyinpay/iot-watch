@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from flask_script import Manager
+from werkzeug.security import generate_password_hash
 
 from app import create_app
 import psycopg2
@@ -31,11 +32,11 @@ def createdb():
         cur.execute("""
         CREATE TABLE admins (
         SSN INT NOT NULL,
-        first_name VARCHAR(40) NOT NULL,
-        last_name VARCHAR(40) NOT NULL,
-        user_name VARCHAR(40) NOT NULL,
-        password VARCHAR(40) NOT NULL,
-        description VARCHAR(100),
+        first_name VARCHAR(255) NOT NULL,
+        last_name VARCHAR(255) NOT NULL,
+        user_name VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        description VARCHAR(255),
         PRIMARY KEY(SSN)
         )""")
 
@@ -115,17 +116,18 @@ def dropdb():
 def fakedata():
     from app.db.models.user import UserModel
     from app.db.business_logic.user import UserBusinessLogic
-
+    from app.db.business_logic.admin import AdminBusinessLogic
     user = UserModel()
 
-    user.ssn = "1111"
+    user.ssn = "2222"
     user.username = "test_username"
-    user.password = "test_password"
+    user.password = generate_password_hash("test", method='sha256')
     user.firstname = "test_firstname"
     user.lastname = "test_lasname"
     user.description = "test_description"
 
     UserBusinessLogic.create(user)
+    AdminBusinessLogic.create(user)
 
     # rows = FUsers.select()
     """
