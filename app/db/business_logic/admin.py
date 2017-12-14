@@ -1,14 +1,16 @@
+from werkzeug.security import generate_password_hash
+
 from app.db.queries.admin import AdminQueries
+from app.db.models.admin import AdminModel
 
 
 class AdminBusinessLogic:
     @staticmethod
-    def select():
-        return AdminQueries.select()
+    def create(ssn, firstname, lastname, username, password, description):
+        if 16 > len(username) > 5:
+            admin = AdminModel(ssn, firstname, lastname, username,
+                               generate_password_hash(password, method='sha256'), description)
 
-    @staticmethod
-    def create(admin):
-        if 16 > len(admin.username) > 5:
             AdminQueries.insert(admin)
             return None
         else:

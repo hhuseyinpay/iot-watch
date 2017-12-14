@@ -120,15 +120,11 @@ def adminlogin():
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
-        user = UserModel(ssn=form.ssn.data, firstname=form.firstname.data, lastname=form.lastname.data,
-                         username=form.username.data,
-                         password=generate_password_hash(
-                             form.password.data, method='sha256'),
-                         description=form.description.data)
-        ret = UserBusinessLogic.create(user)
+        ret = UserBusinessLogic.create(form.ssn.data, form.firstname.data, form.lastname.data,
+                                       form.username.data, form.password.data, form.description.data)
 
         if ret is None:
-            return "OK"
+            return redirect(url_for('main.login'))
         else:
-            return "sıkıntı bilaader"
+            return ret
     return render_template('signup.html', form=form)

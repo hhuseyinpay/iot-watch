@@ -15,7 +15,7 @@ class AdminQueries:
                   VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" %
                 (user.ssn, user.firstname, user.lastname, user.username, user.password, user.description))
             """
-            cur.callproc('public.insert_admin',
+            cur.callproc('public.admin_insert',
                          [admin.ssn, admin.firstname, admin.lastname, admin.username, admin.password,
                           admin.description])
         except psycopg2.Error as e:
@@ -28,8 +28,10 @@ class AdminQueries:
         cur = conn.cursor()
 
         # cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
-
-        cur.callproc('public.get_admin', [ssn])
+        try:
+            cur.callproc('public.admin_get', [ssn])
+        except psycopg2.Error as e:
+            print(e)
         row = cur.fetchone()
         cur.close()
 
