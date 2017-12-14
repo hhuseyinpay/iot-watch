@@ -15,7 +15,7 @@ class UserQueries:
                   VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" %
                 (user.ssn, user.firstname, user.lastname, user.username, user.password, user.description))
             """
-            cur.callproc('public.insert_user',
+            cur.callproc('public.user_insert',
                          [user.ssn, user.firstname, user.lastname, user.username, user.password, user.description])
         except psycopg2.Error as e:
             print(e)
@@ -27,8 +27,10 @@ class UserQueries:
         cur = conn.cursor()
 
         # cur.execute("SELECT * FROM users WHERE ssn='%s'" % ssn)
-
-        cur.callproc('public.get_user', [ssn])
+        try:
+            cur.callproc('public.user_get', [ssn])
+        except psycopg2.Error as e:
+            print(e)
         row = cur.fetchone()
         cur.close()
 
