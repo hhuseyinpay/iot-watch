@@ -21,7 +21,7 @@ def createdb():
         # user
         cur.execute("""
             CREATE TABLE users (
-            ssn INTEGER PRIMARY KEY,
+            ssn BIGINT PRIMARY KEY,
             first_name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NOT NULL,
             user_name VARCHAR(255) NOT NULL, 
@@ -31,7 +31,7 @@ def createdb():
         # admin
         cur.execute("""
         CREATE TABLE admins (
-        SSN INT NOT NULL,
+        SSN BIGINT NOT NULL,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
         user_name VARCHAR(255) NOT NULL,
@@ -43,7 +43,7 @@ def createdb():
         # location
         cur.execute("""
         CREATE TABLE location (
-        id INT NOT NULL,
+        id SERIAL NOT NULL,
         name VARCHAR(40) NOT NULL,
         description VARCHAR(100),
         PRIMARY KEY(id)
@@ -52,7 +52,7 @@ def createdb():
         # measurement_type
         cur.execute("""
         CREATE TABLE measurement_type (
-        id INT NOT NULL,
+        id SERIAL NOT NULL,
         name VARCHAR(40) NOT NULL,
         description VARCHAR(100),
         PRIMARY KEY(id)
@@ -61,7 +61,7 @@ def createdb():
         # device_type
         cur.execute("""
         CREATE TABLE device_type (
-        id INT NOT NULL,
+        id SERIAL NOT NULL,
         name VARCHAR(40) NOT NULL,
         description VARCHAR(100),
         PRIMARY KEY(id)
@@ -70,7 +70,7 @@ def createdb():
         # reporting_device
         cur.execute("""
         CREATE TABLE reporting_device (
-        id INT NOT NULL,
+        id SERIAL NOT NULL,
         name VARCHAR(40) NOT NULL,
         description VARCHAR(100),
         lastIpaddress VARCHAR(50),
@@ -84,7 +84,7 @@ def createdb():
         # measurrment
         cur.execute("""
         CREATE TABLE measurement (
-        id INT NOT NULL,
+        id SERIAL NOT NULL,
         measurement_type_id INT NOT NULL,
         reporting_device_id INT NOT NULL,
         location_id INT NOT NULL,
@@ -114,42 +114,52 @@ def dropdb():
 
 @manager.command
 def fakedata():
-    from app.db.models.user import UserModel
     from app.db.business_logic.user import UserBusinessLogic
     from app.db.business_logic.admin import AdminBusinessLogic
-    user = UserModel()
+    from app.db.business_logic.device_type import DeviceTypeBusinessLogic
+    from app.db.business_logic.location import LocationBusinessLogic
+    from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
+    from app.db.business_logic.measurement_type import MeasurementTypeBusinessLogic
+    from app.db.business_logic.measurement import MeasurementBusinessLogic
+    # UserBusinessLogic.create("123456789", "test_username", "test", "test_firstname", "test_lastname", "test_description")
 
-    user.ssn = "2222"
-    user.username = "test_username"
-    user.password = generate_password_hash("test", method='sha256')
-    user.firstname = "test_firstname"
-    user.lastname = "test_lasname"
-    user.description = "test_description"
+    # AdminBusinessLogic.create("123456789", "test_username", "test", "test_firstname", "test_lastname", "test_description")
 
-    UserBusinessLogic.create(user)
-    AdminBusinessLogic.create(user)
+    DeviceTypeBusinessLogic.create("_test_device_type", "no description")
+    DeviceTypeBusinessLogic.create("_test_device_type2", "no description")
+    LocationBusinessLogic.create("_test_location", "no description")
+    LocationBusinessLogic.create("_test_location2", "no description")
 
-    # rows = FUsers.select()
-    """
-    for row in rows:
-        print("SSN = ", row[0])
-        print("FIRST NAME = ", row[1])
-        print("LAST NAME = ", row[2])
-        print("USER NAME = ", row[3])
-        print("PASSWORD = ", row[4])
-        print("DESCRIPTON = ", row[5], "\n")
-    """
+    ReportingDeviceBusinessLogic.create("_test_report_device", "sıcaklık vs işte ya", "192.168.1.2", 1, 1)
 
+    ReportingDeviceBusinessLogic.create("_test_report_device2", "sıcaklık vs işte ya", "192.168.1.2", 1, 1)
+
+    ReportingDeviceBusinessLogic.create("_test_report_device3", "sıcaklık vs işte ya", "192.168.1.2", 1, 1)
+
+    MeasurementTypeBusinessLogic.create("test_measurementType_name", "no description")
+    MeasurementTypeBusinessLogic.create("test_measurementType_name2", "no description")
+
+    MeasurementBusinessLogic.create(1, 1, 1, 50.5)
+    MeasurementBusinessLogic.create(1, 1, 1, 25)
+    MeasurementBusinessLogic.create(2, 2, 2, 35.5)
+    MeasurementBusinessLogic.create(1, 2, 1, 20.5)
+    MeasurementBusinessLogic.create(1, 1, 2, 98)
+    MeasurementBusinessLogic.create(2, 1, 2, 18)
 
 @manager.command
 def test():
     from app.db.queries.user import UserQueries
     from app.db.models.user import UserModel
-
+    from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
     # print(UserQueries.get_user(1111).firstname)
 
-    UserQueries.insert(
-        UserModel(12345, "deneme first", "last deneme", "biraz uzun lazım", "123412344", "açıklama yok birader"))
+    # UserQueries.insert(UserModel(12345, "deneme first", "last deneme", "biraz uzun lazım", "123412344", "açıklama yok birader"))
+
+    rows = ReportingDeviceBusinessLogic.get_all()
+    print(rows)
+    for row in rows:
+        print(str(row.id) + " - " + row.name + " - " + row.description + " - " + row.lastipaddress + " - " + str(
+            row.device_type_id) + " - " + str(row.location_id))
 
 
 if __name__ == '__main__':
