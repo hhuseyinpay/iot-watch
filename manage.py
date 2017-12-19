@@ -121,9 +121,11 @@ def fakedata():
     from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
     from app.db.business_logic.measurement_type import MeasurementTypeBusinessLogic
     from app.db.business_logic.measurement import MeasurementBusinessLogic
-    # UserBusinessLogic.create("123456789", "test_username", "test", "test_firstname", "test_lastname", "test_description")
+    UserBusinessLogic.create("123456789", "test_firstname", "test_lsatname", "test_username", "password",
+                             "test_description")
 
-    # AdminBusinessLogic.create("123456789", "test_username", "test", "test_firstname", "test_lastname", "test_description")
+    AdminBusinessLogic.create("123456789", "test_firstname", "test_lsatname", "test_username", "password",
+                              "test_description")
 
     DeviceTypeBusinessLogic.create("_test_device_type", "no description")
     DeviceTypeBusinessLogic.create("_test_device_type2", "no description")
@@ -146,20 +148,25 @@ def fakedata():
     MeasurementBusinessLogic.create(1, 1, 2, 98)
     MeasurementBusinessLogic.create(2, 1, 2, 18)
 
+
 @manager.command
 def test():
     from app.db.queries.user import UserQueries
     from app.db.models.user import UserModel
+    from app.db.business_logic.user import UserBusinessLogic
+    from app.db.business_logic.admin import AdminBusinessLogic
     from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
     # print(UserQueries.get_user(1111).firstname)
 
     # UserQueries.insert(UserModel(12345, "deneme first", "last deneme", "biraz uzun lazım", "123412344", "açıklama yok birader"))
 
+    print(UserBusinessLogic.get_user(123456789).firstname)
+    print(AdminBusinessLogic.get_user(123456789).firstname)
     rows = ReportingDeviceBusinessLogic.get_all()
-    print(rows)
-    for row in rows:
-        print(str(row.id) + " - " + row.name + " - " + row.description + " - " + row.lastipaddress + " - " + str(
-            row.device_type_id) + " - " + str(row.location_id))
+    # print(rows)
+    # for row in rows:
+    #    print(str(row.id) + " - " + row.name + " - " + row.description + " - " + row.lastipaddress + " - " + str(
+    #       row.device_type_id) + " - " + str(row.location_id))
 
 
 if __name__ == '__main__':

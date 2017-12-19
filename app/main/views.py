@@ -4,10 +4,11 @@ from flask import request, render_template, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
-from app.db.models.user import UserModel
 from app.db.business_logic.user import UserBusinessLogic
-from app.db.models.admin import AdminModel
 from app.db.business_logic.admin import AdminBusinessLogic
+from app.db.business_logic.device_type import DeviceTypeBusinessLogic
+from app.db.business_logic.location import LocationBusinessLogic
+from app.db.business_logic.measurement_type import MeasurementTypeBusinessLogic
 
 
 @main.route("/", methods=['GET', 'POST'])
@@ -63,7 +64,6 @@ def index():
     locations = ["loc1", "loc2"]
     last_meas = 15.9
     last_local_ip = "192.168.1.3"
-
     if current_user.admin is True:
         admin = True
     else:
@@ -98,7 +98,6 @@ def logout():
     return redirect(url_for('main.login'))
 
 
-@main.route("/admin", methods=['GET', 'POST'])
 @main.route("/admin/login", methods=['GET', 'POST'])
 def adminlogin():
     if current_user.is_authenticated:
@@ -128,3 +127,43 @@ def signup():
         else:
             return ret
     return render_template('signup.html', form=form)
+
+
+@main.route("/admin", methods=['GET'])
+@login_required
+def admin():
+    if current_user.admin is not True:
+        return render_template('403.html')
+
+    return render_template('admin.html')
+
+
+@main.route("/admin/device_types")
+@login_required
+def device_types():
+    if current_user.admin is not True:
+        return render_template('403.html')
+
+    device_type = DeviceTypeBusinessLogic.get_all()
+    return render_template('device_types.html', device_types=device_type)
+
+
+@main.route("/admin/locations")
+@login_required
+def locations():
+    if current_user.admin is not True:
+        return render_template('403.html')
+
+    location = LocationBusinessLogic.get_all()
+    return render_template('locations.html', locations=location)
+
+
+@main.route("/admin/measurement_types")
+@login_required
+def measurement_types():
+    if current_user.admin is not True:
+        return render_template('403.html')
+
+    measurement_type = MeasurementTypeBusinessLogic.get_all()
+    return render_template('measurement_types.html', measurement_types=measurement_type)
+
