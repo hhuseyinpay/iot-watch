@@ -1,7 +1,7 @@
 <html>
 <style>
 input[type=text], select {
-    width: 44.9%;
+    width: 18.5%;
     padding: 12px 20px;
     margin: 2px 0;
     display: inline-block;
@@ -64,19 +64,23 @@ div {
 </style>
 <body>
 
-<h2 id="header_2" align="center">Location Table</h3>
+<h2 id="header_2" align="center">reporting_device Table</h3>
 
 <div>
   <form action="/action_page.php">
     <label for="name">Name</label>
-    <input type="text" id="name" name="name" placeholder="Location name..">
+    <input type="text" id="name" name="name" placeholder="Name...">
 
-    <label for="desc">Description</label>
-    <input type="text" id="desc" name="desc" placeholder="Description..">
+    <label for="lastipaddress">lastipaddress</label>
+    <input type="text" id="lastipaddress" name="lastipaddress" placeholder="lastipaddress..">
 
-    {{ form.hidden_tag() }}
-    {{ wtf.form_field(form.name) }}
-    {{ wtf.form_field(form.description) }}
+    <label for="device_type_id">device_type_id</label>
+    <input type="text" id="device_type_id" name="device_type_id" placeholder="device_type_id..">
+
+    <label for="location_id">location_id</label>
+    <input type="text" id="location_id" name="location_id" placeholder="location_id..">
+
+
 
     <input type="submit" value="Add">
   </form>
@@ -85,20 +89,21 @@ div {
 <div>
 <table id="customers">
   <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Description</th>
+    <th>id</th>
+    <th>name</th>
+    <th>lastipaddress</th>
+    <th>device_type_id</th>
+    <th>location_id</th>
   </tr>
-  {%- for location in locations%}
+  {%- for reporting_device in reporting_devices%}
   <tr>
-    <td>{{location.id}}</td>
-    <td>{{location.name}}</td>
-    <td>{{location.description}}</td>
+    <td>{{reporting_device.id}}</td>
+    <td>{{reporting_device.name}}</td>
+    <td>{{reporting_device.lastipaddress}}</td>
+    <td>{{reporting_device.device_type_id}}</td>
+    <td>{{reporting_device.location_id}}</td>
   </tr>
   {%- endfor %}
-
-
-
 </table>
 </div>
 
