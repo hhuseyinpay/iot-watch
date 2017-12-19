@@ -1,0 +1,111 @@
+<html>
+<style>
+input[type=text], select {
+    width: 18.5%;
+    padding: 12px 20px;
+    margin: 2px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 5px;
+    padding: 20px;
+}
+
+#customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+#customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+
+}
+
+#header_2 {
+  color: #4C7F02;
+}
+</style>
+<body>
+
+<h2 id="header_2" align="center">reporting_device Table</h3>
+
+<div>
+  <form action="/action_page.php">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" placeholder="Name...">
+
+    <label for="lastipaddress">lastipaddress</label>
+    <input type="text" id="lastipaddress" name="lastipaddress" placeholder="lastipaddress..">
+
+    <label for="device_type_id">device_type_id</label>
+    <input type="text" id="device_type_id" name="device_type_id" placeholder="device_type_id..">
+
+    <label for="location_id">location_id</label>
+    <input type="text" id="location_id" name="location_id" placeholder="location_id..">
+
+
+
+    <input type="submit" value="Add">
+  </form>
+</div>
+
+<div>
+<table id="customers">
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>lastipaddress</th>
+    <th>device_type_id</th>
+    <th>location_id</th>
+  </tr>
+  {%- for reporting_device in reporting_devices%}
+  <tr>
+    <td>{{reporting_device.id}}</td>
+    <td>{{reporting_device.name}}</td>
+    <td>{{reporting_device.lastipaddress}}</td>
+    <td>{{reporting_device.device_type_id}}</td>
+    <td>{{reporting_device.location_id}}</td>
+  </tr>
+  {%- endfor %}
+</table>
+</div>
+
+</body>
+</html>
