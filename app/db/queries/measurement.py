@@ -20,6 +20,24 @@ class MeasurementQueries:
             return None
 
     @staticmethod
+    def get_all():
+        cur = conn.cursor()
+        try:
+            cur.callproc('public.measurement_get_all')
+        except psycopg2.Error as e:
+            print(e)
+        rows = cur.fetchall()
+        cur.close()
+
+        if rows:
+            ret = []
+            for row in rows:
+                ret.append(MeasurementModel(row[0], row[1], row[2], row[3], row[4], row[5]))
+            return ret
+        else:
+            return None
+
+    @staticmethod
     def insert(measurement):
         cur = conn.cursor()
         try:
