@@ -166,4 +166,3 @@ def measurement_types():
 
     measurement_type = MeasurementTypeBusinessLogic.get_all()
     return render_template('measurement_types.html', measurement_types=measurement_type)
-
