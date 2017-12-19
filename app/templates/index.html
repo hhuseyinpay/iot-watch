@@ -9,16 +9,13 @@
 <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
 {% endblock %}
 
-{% if admin is defined %}
-    value of variable: {{ admin }}
-{% endif %}
-
-
 <meta id="my-data" data-name="{{name}}">
 
 
-
 <title>IOT Watch</title>
+
+{% if data %}
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
 
@@ -35,7 +32,7 @@
 
         // Create our data table.
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Time of Day');
+        data.addColumn('datetime', 'Time of Day');
         data.addColumn('number','{{meas_type}}');
 
 
@@ -49,9 +46,11 @@
                 // Each iteration evaluates to something like this:
                 // ['Saturday', 28],
 
+
+
               {%- for date,value in data %}
-                  [{{ date }}, {{ value }}],
-                {%- endfor %}
+                  [new Date({{date}}), {{ value }}],
+              {%- endfor %}
 
 
 
@@ -65,11 +64,8 @@
         chart.draw(data, { vAxis: {baseline: 0}});
       }
 
-
-
-
 </script>
-
+{% endif %}
 <!-- <style>
     #content {
         width: 80%;
@@ -94,17 +90,21 @@
 {% block content %}
 
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">IotWatch</a>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">IotWatch</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/signup">Signup</a></li>
+            <!--<li><a href="/login">Login</a></li>-->
+            {% if admin %}
+            <li><a href="/admin">Admin</a></li>
+            {% endif %}
+            <li><a href="/logout">Logout</a></li>
+
+        </ul>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="/">Home</a></li>
-      <li><a href="/signup">Signup</a></li>
-      <li><a href="/login">Login</a></li>
-        <li><a href="/logout">Logout</a></li>
-    </ul>
-  </div>
 </nav>
 
 
@@ -127,7 +127,7 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
                     {%- for item in locations %}
-                    <li><a href="{{ url_for('main.index') }}"> {{ item }} </a></li>
+                    <li><a href="{{ url_for('main.index', location_id=item.id) }}"> {{ item.name }} </a></li>
                     {%- endfor %}
                 </ul>
             </div>
@@ -142,10 +142,12 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                  <!-- LOCATION CLASS'I OLUŞTURULDUKTAN SONRA item.name ŞEKLİNE ÇEVİR!-->
-                  {%- for item in devices %}
-                  <li><a href="{{ url_for('main.index') }}"> {{ item }} </a></li>
-                  {%- endfor %}
+                    <!-- LOCATION CLASS'I OLUŞTURULDUKTAN SONRA item.name ŞEKLİNE ÇEVİR!-->
+                    {% if devices %}
+                        {%- for item in devices %}
+                            <li><a href="{{ url_for('main.index', device_id=item.id) }}"> {{ item.name }} </a></li>
+                        {%- endfor %}
+                    {% endif %}
 
                 </ul>
             </div>
@@ -188,7 +190,7 @@
         <h1>IOTWATCH VALUES</h1>
         <div id="chart_div"></div>
     </div>-->
-   <div class="col-lg-9">
+    <div class="col-lg-9">
         <div id="chart_div" style="width: 100%; min-height: 400px"></div>
     </div>
 </div>

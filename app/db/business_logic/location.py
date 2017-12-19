@@ -8,7 +8,7 @@ class LocationBusinessLogic:
         return LocationQueries.get(id)
 
     @staticmethod
-    def get_all():
+    def get_all() -> object:
         return LocationQueries.get_all()
 
     @staticmethod

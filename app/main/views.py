@@ -1,6 +1,6 @@
 from . import main
 from .form import SignUpForm, LoginForm, NameDescriptionForm
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash, request
 from werkzeug.security import check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
@@ -13,67 +13,34 @@ from app.db.business_logic.measurement import MeasurementBusinessLogic
 from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
 
 
-@main.route("/", methods=['GET', 'POST'])
+@main.route("/", methods=['GET'])
 @login_required
 def index():
-    """data = [('Date(2016,12,15,11,30,0,0)', 20.9, 50.9, 40.0),('Date(2016,12,15,11,30,0,0)', 20.9, 50.9, 40.0), ('Date(2017,12,15,11,30,0,0)', 35.9, 15.0, 20.0),
-            ('Date(2016,12,15,10,30,0,0)', 72.9, 72.9, 27.0), ('Date(2016,11,15,11,30,0,0)', 17.9, 22.0, 41.0),
-            ('Date(2016,12,15,10,30,0,0)', 68.9, 85.0, 39.0), ('Date(2016,11,15,11,30,0,0)', 32.9, 29.0, 41.0),
-            ('Date(2016,12,15,10,30,0,0)', 76.9, 58.0, 21.0), ('Date(2016,11,15,11,30,0,0)', 82.9, 32.0, 48.0),
-            ('Date(2016,12,15,10,30,0,0)', 99.9, 51.0, 45.0), ('Date(2016,11,15,11,30,0,0)', 6.9, 3.0, 41.0),
-            ('Date(2016,12,15,11,30,0,0)', 65.9, 35.0, 40.0), ('Date(2017,12,15,11,30,0,0)', 35.9, 15.0, 20.0),
-            ('Date(2016,12,15,10,30,0,0)', 72.9, 45.0, 27.0), ('Date(2016,11,15,11,30,0,0)', 17.9, 22.0, 41.0),
-
-
-            ]"""
-
-    data = [('Date(2016,12,15,11,30,0,0)', 25.9),
-            ('Date(2016,12,15,12,30,0,0)', 26.9),
-            ('Date(2016,12,15,13,30,0,0)', 32.9),
-            ('Date(2016,12,15,14,30,0,0)', 17.9),
-            ('Date(2016,12,15,15,30,0,0)', 82.9),
-            ('Date(2016,12,15,16,30,0,0)', 45.9),
-            ('Date(2016,12,15,17,30,0,0)', 55.9),
-            ('Date(2016,12,15,18,30,0,0)', 62.9),
-            ('Date(2016,12,15,19,30,0,0)', 6.9),
-            ('Date(2016,12,15,20,30,0,0)', 25.9),
-            ('Date(2016,12,15,11,30,0,0)', 41.9),
-            ('Date(2016,12,15,12,30,0,0)', 26.9),
-            ('Date(2016,12,15,13,30,0,0)', 28.9),
-            ('Date(2016,12,15,14,30,0,0)', 19.9),
-            ('Date(2016,12,15,15,30,0,0)', 39.9),
-            ('Date(2016,12,15,16,30,0,0)', 41.9),
-            ('Date(2016,12,15,17,30,0,0)', 58.9),
-            ('Date(2016,12,15,18,30,0,0)', 66.9),
-            ('Date(2016,12,15,19,30,0,0)', 12.9),
-            ('Date(2016,12,15,20,30,0,0)', 33.9),
-            ('Date(2016,12,15,20,30,0,0)', 28.9),
-            ('Date(2016,12,15,11,30,0,0)', 44.9),
-            ('Date(2016,12,15,12,30,0,0)', 22.9),
-            ('Date(2016,12,15,13,30,0,0)', 23.9),
-            ('Date(2016,12,15,14,30,0,0)', 13.9),
-            ('Date(2016,12,15,15,30,0,0)', 35.9),
-            ('Date(2016,12,15,16,30,0,0)', 47.9),
-            ('Date(2016,12,15,17,30,0,0)', 58.9),
-            ('Date(2016,12,15,18,30,0,0)', 63.9),
-            ('Date(2016,12,15,19,30,0,0)', 17.9),
-            ('Date(2016,12,15,20,30,0,0)', 38.9),
-            ]
-
-    meas_type = "Deneme"
-
-    devices = ["Deneme1", "Deneme2"]
-    locations = ["loc1", "loc2"]
-    last_meas = 15.9
-    last_local_ip = "192.168.1.3"
     if current_user.admin is True:
         admin = True
     else:
         admin = None
 
-    return render_template('index.html', data=data, meas_type=meas_type, devices=devices, locations=locations,
-                           last_meas=last_meas,
-                           last_local_ip=last_local_ip, admin=admin)
+    location_id = request.args.get('location_id')
+    device_id = request.args.get('device_id')
+
+    data = None
+    if device_id:
+        data = MeasurementBusinessLogic.get_data_by_device(device_id)
+        print(data[0][0])
+
+    devices = None
+    if location_id is not None:
+        devices = ReportingDeviceBusinessLogic.get_by_location(location_id)
+
+    location = LocationBusinessLogic.get_all()
+    meas_type = "Deneme"
+    last = MeasurementBusinessLogic.get_last_measured_ipaddress()
+    last_meas = last[0]
+    last_local_ip = last[1]
+
+    return render_template('index.html', data=data, meas_type=meas_type, devices=devices, locations=location,
+                           last_meas=last_meas, last_local_ip=last_local_ip, admin=admin)
 
 
 @main.route("/login", methods=['GET', 'POST'])
@@ -84,12 +51,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = UserBusinessLogic.get_user(form.ssn.data)
-        print(user.ssn)
         if user is not None and check_password_hash(user.password, form.password.data):
             login_user(user)
 
             return redirect(url_for('main.index'))
-
+        flash('wrong ssn or password')
+        return render_template('login.html', form=form)
     return render_template('login.html', form=form)
 
 
@@ -108,11 +75,11 @@ def adminlogin():
     form = LoginForm()
     if form.validate_on_submit():
         admin = AdminBusinessLogic.get_admin(form.ssn.data)
-        print(admin.ssn)
         if admin is not None and check_password_hash(admin.password, form.password.data):
             login_user(admin)
             return redirect(url_for('main.index'))
-
+        flash('wrong ssn or password')
+        return render_template('login.html', form=form)
     return render_template('login.html', form=form)
 
 
@@ -140,7 +107,7 @@ def admin():
     return render_template('admin.html')
 
 
-@main.route("/admin/device_types")
+@main.route("/admin/device_types", methods=['GET', 'POST'])
 @login_required
 def device_types():
     if current_user.admin is not True:
@@ -150,13 +117,20 @@ def device_types():
     return render_template('device_types.html', device_types=device_type)
 
 
-@main.route("/admin/locations")
+@main.route("/admin/locations", methods=['GET', 'POST'])
 @login_required
 def locations():
     if current_user.admin is not True:
         return render_template('403.html')
 
     form = NameDescriptionForm()
+    if form.validate_on_submit():
+        ret = LocationBusinessLogic.create(form.name.data, form.description.data)
+        if ret is None:
+            flash("Adding is successfull")
+        else:
+            flash(ret)
+
     location = LocationBusinessLogic.get_all()
     return render_template('locations.html', form=form, locations=location)
 
@@ -171,7 +145,7 @@ def measurement_types():
     return render_template('measurement_types.html', measurement_types=measurement_type)
 
 
-@main.route
+@main.route("/admin/measurements")
 @login_required
 def measurements():
     if current_user.admin is not True:
@@ -181,7 +155,7 @@ def measurements():
     return render_template('measurements.html', measurements=measurement)
 
 
-@main.route
+@main.route("/admin/reporting_devices")
 @login_required
 def reporting_devices():
     if current_user.admin is not True:
@@ -189,3 +163,10 @@ def reporting_devices():
 
     reporting_device = ReportingDeviceBusinessLogic.get_all()
     return render_template('reporting_devices.html', reporting_devices=reporting_device)
+
+
+@main.route("/admin/users")
+@login_required
+def users():
+    if current_user.admin is not True:
+        return render_template('403.html')

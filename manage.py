@@ -121,11 +121,9 @@ def fakedata():
     from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
     from app.db.business_logic.measurement_type import MeasurementTypeBusinessLogic
     from app.db.business_logic.measurement import MeasurementBusinessLogic
-    UserBusinessLogic.create("123456789", "test_firstname", "test_lsatname", "test_username", "password",
-                             "test_description")
+    # UserBusinessLogic.create("123456789", "test_firstname", "test_lsatname", "test_username", "password","test_description")
 
-    AdminBusinessLogic.create("123456789", "test_firstname", "test_lsatname", "test_username", "password",
-                              "test_description")
+    # AdminBusinessLogic.create("123456789", "test_firstname", "test_lsatname", "test_username", "password","test_description")
 
     DeviceTypeBusinessLogic.create("_test_device_type", "no description")
     DeviceTypeBusinessLogic.create("_test_device_type2", "no description")
@@ -141,13 +139,13 @@ def fakedata():
     MeasurementTypeBusinessLogic.create("test_measurementType_name", "no description")
     MeasurementTypeBusinessLogic.create("test_measurementType_name2", "no description")
 
-    MeasurementBusinessLogic.create(1, 1, 1, 50.5)
+    # MeasurementBusinessLogic.create(1, 1, 1, 50.5)
+    # MeasurementBusinessLogic.create(1, 1, 1, 25)
+    # MeasurementBusinessLogic.create(2, 2, 2, 35.5)
+    # MeasurementBusinessLogic.create(1, 2, 1, 20.5)
+    # MeasurementBusinessLogic.create(1, 1, 2, 98)
+    # MeasurementBusinessLogic.create(2, 1, 2, 18)
     MeasurementBusinessLogic.create(1, 1, 1, 25)
-    MeasurementBusinessLogic.create(2, 2, 2, 35.5)
-    MeasurementBusinessLogic.create(1, 2, 1, 20.5)
-    MeasurementBusinessLogic.create(1, 1, 2, 98)
-    MeasurementBusinessLogic.create(2, 1, 2, 18)
-
 
 @manager.command
 def test():

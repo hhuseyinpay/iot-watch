@@ -1,5 +1,8 @@
-<head><link rel="stylesheet" href="../static/css/admin.css"></head>
+{% extends "bootstrap/base.html" %}
 
+{% block styles %}
+{{super()}}
+<head><link rel="stylesheet" href="../static/css/admin.css"></head>
 <style>
 #links {
     width: 100%;
@@ -16,6 +19,27 @@
     background-color: #45a049;
 }
 </style>
+{% endblock  %}
+
+{% block content %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">IotWatch</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/signup">Signup</a></li>
+            <!--<li><a href="/login">Login</a></li>-->
+            {% if admin %}
+            <li><a href="/admin">Admin</a></li>
+            {% endif %}
+            <li><a href="/logout">Logout</a></li>
+
+        </ul>
+    </div>
+</nav>
+
 
 <div class="admin-panel clearfix">
   <div class="slidebar">
@@ -61,3 +85,4 @@
 
    </div>
 </div>
+{% endblock %}

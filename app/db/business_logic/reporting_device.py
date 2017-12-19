@@ -20,3 +20,7 @@ class ReportingDeviceBusinessLogic:
     @staticmethod
     def get_all():
         return ReportingDeviceQueries.get_all()
+
+    @staticmethod
+    def get_by_location(location_id):
+        return ReportingDeviceQueries.get_by_location(location_id)
