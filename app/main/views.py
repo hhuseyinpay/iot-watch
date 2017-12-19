@@ -1,5 +1,5 @@
 from . import main
-from .form import SignUpForm, LoginForm
+from .form import SignUpForm, LoginForm, NameDescriptionForm
 from flask import request, render_template, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -154,8 +154,9 @@ def locations():
     if current_user.admin is not True:
         return render_template('403.html')
 
+    form = NameDescriptionForm()
     location = LocationBusinessLogic.get_all()
-    return render_template('locations.html', locations=location)
+    return render_template('locations.html', form=form, locations=location)
 
 
 @main.route("/admin/measurement_types")
