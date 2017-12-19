@@ -1,7 +1,7 @@
 from . import main
 from .form import SignUpForm, LoginForm, NameDescriptionForm
-from flask import request, render_template, redirect, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import render_template, redirect, url_for
+from werkzeug.security import check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
 from app.db.business_logic.user import UserBusinessLogic
@@ -9,6 +9,8 @@ from app.db.business_logic.admin import AdminBusinessLogic
 from app.db.business_logic.device_type import DeviceTypeBusinessLogic
 from app.db.business_logic.location import LocationBusinessLogic
 from app.db.business_logic.measurement_type import MeasurementTypeBusinessLogic
+from app.db.business_logic.measurement import MeasurementBusinessLogic
+from app.db.business_logic.reporting_device import ReportingDeviceBusinessLogic
 
 
 @main.route("/", methods=['GET', 'POST'])
@@ -167,3 +169,23 @@ def measurement_types():
 
     measurement_type = MeasurementTypeBusinessLogic.get_all()
     return render_template('measurement_types.html', measurement_types=measurement_type)
+
+
+@main.route
+@login_required
+def measurements():
+    if current_user.admin is not True:
+        return render_template('403.html')
+
+    measurement = MeasurementBusinessLogic.get_all()
+    return render_template('measurements.html', measurements=measurement)
+
+
+@main.route
+@login_required
+def reporting_devices():
+    if current_user.admin is not True:
+        return render_template('403.html')
+
+    reporting_device = ReportingDeviceBusinessLogic.get_all()
+    return render_template('reporting_devices.html', reporting_devices=reporting_device)
