@@ -8,6 +8,10 @@ class LocationBusinessLogic:
         return LocationQueries.get(id)
 
     @staticmethod
+    def get_all():
+        return LocationQueries.get_all()
+
+    @staticmethod
     def create(name="", description=""):
         if 30 > len(name) > 3:
             location = LocationModel(name, description)

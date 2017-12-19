@@ -20,6 +20,24 @@ class DeviceTypeQueries:
             return None
 
     @staticmethod
+    def get_all():
+        cur = conn.cursor()
+        try:
+            cur.callproc('public.device_type_get_all')
+        except psycopg2.Error as e:
+            print(e)
+        rows = cur.fetchall()
+        cur.close()
+
+        if rows:
+            ret = []
+            for row in rows:
+                ret.append(DeviceTypeModel(row[1], row[2], row[0]))
+            return ret
+        else:
+            return None
+
+    @staticmethod
     def insert(devicetype):
         cur = conn.cursor()
         try:

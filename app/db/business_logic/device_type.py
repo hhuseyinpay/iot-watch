@@ -8,6 +8,10 @@ class DeviceTypeBusinessLogic:
         return DeviceTypeQueries.get(id)
 
     @staticmethod
+    def get_all():
+        return DeviceTypeQueries.get_all()
+
+    @staticmethod
     def create(name="", description=""):
         if 30 > len(name) > 3:
             devicetype = DeviceTypeModel(name, description)

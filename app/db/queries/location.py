@@ -22,6 +22,24 @@ class LocationQueries:
             return None
 
     @staticmethod
+    def get_all():
+        cur = conn.cursor()
+        try:
+            cur.callproc('public.location_get_all')
+        except psycopg2.Error as e:
+            print(e)
+        rows = cur.fetchall()
+        cur.close()
+
+        if rows:
+            ret = []
+            for row in rows:
+                ret.append(LocationModel(row[1], row[2], row[0]))
+            return ret
+        else:
+            return None
+
+    @staticmethod
     def insert(location):
         cur = conn.cursor()
         try:
