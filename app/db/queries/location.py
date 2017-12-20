@@ -63,7 +63,7 @@ class LocationQueries:
     def update(id_, name, description):
         cur = conn.cursor()
         try:
-            cur.callproc('public.lcoation_update', [id_, name, description])
+            cur.callproc('public.location_update', [id_, name, description])
         except psycopg2.Error as e:
             print(e)
         conn.commit()

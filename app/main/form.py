@@ -26,5 +26,14 @@ class LoginForm(FlaskForm):
 class NameDescriptionForm(FlaskForm):
     name = StringField('name', validators=[InputRequired(), Length(min=3, max=20)])
     description = StringField('description', validators=[InputRequired(), Length(min=0, max=200)])
+    submit1=SubmitField('Insert')
 
+class IDNameDescriptionForm(FlaskForm):
+    id=StringField('id', validators=[InputRequired(), Length(min=0, max=2000)])
+    name = StringField('name', validators=[InputRequired(), Length(min=3, max=20)])
+    description = StringField('description', validators=[InputRequired(), Length(min=0, max=200)])
+    submit2=SubmitField('Update')
 
+class IDForm(FlaskForm):
+    id=StringField('id', validators=[InputRequired(), Length(min=1, max=2000)])
+    submit3=SubmitField('Delete')

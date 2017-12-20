@@ -63,8 +63,36 @@
 
     }
 
+    #form_tables {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+
+    }
+
+    #form_tables td, #form_tables th {
+        border: 0px solid #ddd;
+        padding: 8px;
+    }
+
+
+    #form_tables th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: 12px;
+        padding-right: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+
+    }
+
     #header_2 {
         color: #4C7F02;
+    }
+
+    #divden div {
+      width: 100%
     }
 </style>
 <body>
@@ -84,9 +112,9 @@
         {% endwith %}
     </div>
 
-    <div>
+    <div id=divden>
         <form action="/admin/locations" method="post">
-            <table>
+            <table id=form_tables>
                 <tr align="center">
                     {{ form.hidden_tag() }}
                     <td width="50%">
@@ -96,9 +124,51 @@
                     <td width="50%">
                         {{ wtf.form_field(form.description) }}
                     </td>
+
+                  </tr>
+            </table>
+            <!--<input type="submit" name="btn" value="Add">-->
+            {{form.submit1}}
+        </form>
+    </div>
+
+
+    <div>
+        <form action="/admin/locations" method="post">
+            <table id=form_tables>
+                <tr align="center">
+                    {{ form2.hidden_tag() }}
+                    <td>
+                        {{ wtf.form_field(form2.id) }}
+                    </td>
+
+                    <td>
+                        {{ wtf.form_field(form2.name) }}
+                    </td>
+
+                    <td>
+                        {{ wtf.form_field(form2.description) }}
+                    </td>
+
                 </tr>
             </table>
-            <input type="submit" value="Add">
+            <!--<input type="submit" name="btn" value="Update">-->
+            {{form2.submit2}}
+        </form>
+
+        <form action="/admin/locations" method="post">
+            <table id=form_tables>
+                <tr align="center">
+                    {{ form3.hidden_tag() }}
+                    <td>
+
+                        {{ wtf.form_field(form3.id) }}
+                      </td>
+
+                </tr>
+            </table>
+            <!--<input type="submit" name="btn" value="Delete">-->
+            {{form3.submit3}}
         </form>
     </div>
     <div>
