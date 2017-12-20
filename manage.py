@@ -20,81 +20,90 @@ def createdb():
 
         # user
         cur.execute("""
-            CREATE TABLE users (
-            ssn BIGINT PRIMARY KEY,
-            first_name VARCHAR(255) NOT NULL,
-            last_name VARCHAR(255) NOT NULL,
-            user_name VARCHAR(255) NOT NULL, 
-            password VARCHAR(255) NOT NULL, 
-            description VARCHAR(255) NOT NULL)""")
+                CREATE TABLE users (
+                ssn BIGINT PRIMARY KEY,
+                first_name VARCHAR(255) NOT NULL,
+                last_name VARCHAR(255) NOT NULL,
+                user_name VARCHAR(255) NOT NULL, 
+                password VARCHAR(255) NOT NULL, 
+                description VARCHAR(255) NOT NULL)""")
 
         # admin
         cur.execute("""
-        CREATE TABLE admins (
-        SSN BIGINT NOT NULL,
-        first_name VARCHAR(255) NOT NULL,
-        last_name VARCHAR(255) NOT NULL,
-        user_name VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        description VARCHAR(255),
-        PRIMARY KEY(SSN)
-        )""")
+                CREATE TABLE admins (
+                SSN BIGINT NOT NULL,
+                first_name VARCHAR(255) NOT NULL,
+                last_name VARCHAR(255) NOT NULL,
+                user_name VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                description VARCHAR(255),
+                PRIMARY KEY(SSN)
+                )""")
 
         # location
         cur.execute("""
-        CREATE TABLE location (
-        id SERIAL NOT NULL,
-        name VARCHAR(40) NOT NULL,
-        description VARCHAR(100),
-        PRIMARY KEY(id)
-        )""")
+                CREATE TABLE location (
+                id SERIAL NOT NULL,
+                name VARCHAR(40) NOT NULL,
+                description VARCHAR(100),
+                PRIMARY KEY(id)
+                )""")
 
         # measurement_type
         cur.execute("""
-        CREATE TABLE measurement_type (
-        id SERIAL NOT NULL,
-        name VARCHAR(40) NOT NULL,
-        description VARCHAR(100),
-        PRIMARY KEY(id)
-        )""")
+                    CREATE TABLE measurement_type (
+                    id SERIAL NOT NULL,
+                    name VARCHAR(40) NOT NULL,
+                    description VARCHAR(100),
+                    PRIMARY KEY(id)
+                    )""")
 
         # device_type
         cur.execute("""
-        CREATE TABLE device_type (
-        id SERIAL NOT NULL,
-        name VARCHAR(40) NOT NULL,
-        description VARCHAR(100),
-        PRIMARY KEY(id)
-        )""")
+                CREATE TABLE device_type (
+                id SERIAL NOT NULL,
+                name VARCHAR(40) NOT NULL,
+                description VARCHAR(100),
+                PRIMARY KEY(id)
+                )""")
 
         # reporting_device
         cur.execute("""
-        CREATE TABLE reporting_device (
-        id SERIAL NOT NULL,
-        name VARCHAR(40) NOT NULL,
-        description VARCHAR(100),
-        lastIpaddress VARCHAR(50),
-        device_type_id INT NOT NULL,
-        location_id INT NOT NULL,
-        PRIMARY KEY(id),
-        FOREIGN KEY(device_type_id) REFERENCES device_type(id),
-        FOREIGN KEY(location_id) REFERENCES location(id)
-        )""")
+                CREATE TABLE reporting_device (
+                id SERIAL NOT NULL,
+                name VARCHAR(40) NOT NULL,
+                description VARCHAR(100),
+                lastIpaddress VARCHAR(50),
+                device_type_id INT NOT NULL,
+                location_id INT NOT NULL,
+                PRIMARY KEY(id),
+                FOREIGN KEY(device_type_id) REFERENCES device_type(id),
+                FOREIGN KEY(location_id) REFERENCES location(id)
+                )""")
 
         # measurrment
         cur.execute("""
-        CREATE TABLE measurement (
-        id SERIAL NOT NULL,
-        measurement_type_id INT NOT NULL,
-        reporting_device_id INT NOT NULL,
-        location_id INT NOT NULL,
-        measured_value FLOAT,
-        measured_date TIMESTAMP,
-        PRIMARY KEY(id),
-        FOREIGN KEY(measurement_type_id) REFERENCES measurement_type(id),
-        FOREIGN KEY(reporting_device_id) REFERENCES reporting_device(id),
-        FOREIGN KEY(location_id) REFERENCES location(id)
-        )""")
+                CREATE TABLE measurement (
+                id SERIAL NOT NULL,
+                measurement_type_id INT NOT NULL,
+                reporting_device_id INT NOT NULL,
+                location_id INT NOT NULL,
+                measured_value FLOAT,
+                measured_date TIMESTAMP,
+                PRIMARY KEY(id),
+                FOREIGN KEY(measurement_type_id) REFERENCES measurement_type(id),
+                FOREIGN KEY(reporting_device_id) REFERENCES reporting_device(id),
+                FOREIGN KEY(location_id) REFERENCES location(id)
+                )""")
+
+        # location
+        cur.execute("""
+                CREATE TABLE user_create_log (
+                id SERIAL NOT NULL ,
+                ssn BIGINT,
+                date TIMESTAMP NOT NULL,
+                PRIMARY KEY(id)
+                )""")
 
         conn.commit()
         cur.close()
@@ -146,6 +155,7 @@ def fakedata():
     # MeasurementBusinessLogic.create(1, 1, 2, 98)
     # MeasurementBusinessLogic.create(2, 1, 2, 18)
     MeasurementBusinessLogic.create(1, 1, 1, 25)
+
 
 @manager.command
 def test():
