@@ -59,7 +59,8 @@ class MeasurementQueries:
     def get_last_measured_ipaddress():
         cur = conn.cursor()
         try:
-            cur.callproc('public.get_last_ipaddress_measurement')
+            cur.execute("SELECT * FROM get_last_ipaddress_measurement_view")
+            # cur.callproc('public.get_last_ipaddress_measurement')
         except psycopg2.Error as e:
             print(e)
         row = cur.fetchone()
