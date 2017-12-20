@@ -48,3 +48,23 @@ class LocationQueries:
             print(e)
         conn.commit()
         cur.close()
+
+    @staticmethod
+    def delete(id_):
+        cur = conn.cursor()
+        try:
+            cur.callproc('public.location_delete', [id_])
+        except psycopg2.Error as e:
+            print(e)
+        conn.commit()
+        cur.close()
+
+    @staticmethod
+    def update(id_, name, description):
+        cur = conn.cursor()
+        try:
+            cur.callproc('public.lcoation_update', [id_, name, description])
+        except psycopg2.Error as e:
+            print(e)
+        conn.commit()
+        cur.close()

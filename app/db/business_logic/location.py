@@ -19,3 +19,11 @@ class LocationBusinessLogic:
             return None
         else:
             return "Name length must be between 3 and 16"
+
+    @staticmethod
+    def update(id_, name, description):
+        return LocationQueries.update(id_, name, description)
+
+    @staticmethod
+    def delete(id_):
+        return LocationQueries.delete(id_)
