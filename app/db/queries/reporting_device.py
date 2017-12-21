@@ -39,7 +39,6 @@ class ReportingDeviceQueries:
         if rows:
             ret = []
             for row in rows:
-                print(row[0])
                 ret.append(ReportingDeviceModel(row[0], row[1], row[2], row[3], row[4], row[5]))
             return ret
         else:

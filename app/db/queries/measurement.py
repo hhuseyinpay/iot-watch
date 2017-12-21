@@ -67,7 +67,6 @@ class MeasurementQueries:
         cur.close()
 
         if row:
-            print(row)
             return row
         else:
             return None

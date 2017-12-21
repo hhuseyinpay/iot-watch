@@ -1,5 +1,5 @@
 from . import main
-from .form import SignUpForm, LoginForm, NameDescriptionForm,IDNameDescriptionForm,IDForm
+from .form import SignUpForm, LoginForm, NameDescriptionForm, IDNameDescriptionForm, IDForm
 from flask import render_template, redirect, url_for, flash, request
 from werkzeug.security import check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -27,7 +27,6 @@ def index():
     data = None
     if device_id:
         data = MeasurementBusinessLogic.get_data_by_device(device_id)
-        print(data[0][0])
 
     devices = None
     if location_id is not None:
@@ -123,16 +122,16 @@ def locations():
     if current_user.admin is not True:
         return render_template('403.html')
 
-    form=None
-    form2=None
-    form3=None
+    form = None
+    form2 = None
+    form3 = None
 
     if 'submit1' in request.form:
         form = NameDescriptionForm()
     if 'submit2' in request.form:
-        form2=IDNameDescriptionForm()
+        form2 = IDNameDescriptionForm()
     if 'submit3' in request.form:
-        form3=IDForm()
+        form3 = IDForm()
 
     if form is not None:
         if form.validate_on_submit():
@@ -145,7 +144,7 @@ def locations():
     if form2 is not None:
         if form2.validate_on_submit() and form2.submit2.data:
             print("form2")
-            LocationBusinessLogic.update(int(form2.id.data),form2.name.data,form2.description.data)
+            LocationBusinessLogic.update(int(form2.id.data), form2.name.data, form2.description.data)
 
     if form3 is not None:
         if form3.validate_on_submit() and form3.submit3.data:
@@ -153,14 +152,14 @@ def locations():
             LocationBusinessLogic.delete(int(form3.id.data))
 
     if form is None:
-        form = NameDescriptionForm(formdata=None,obj=...)
+        form = NameDescriptionForm(formdata=None, obj=...)
     if form2 is None:
-        form2 = IDNameDescriptionForm(formdata=None,obj=...)
+        form2 = IDNameDescriptionForm(formdata=None, obj=...)
     if form3 is None:
-        form3 = IDForm(formdata=None,obj=...)
+        form3 = IDForm(formdata=None, obj=...)
 
     location = LocationBusinessLogic.get_all()
-    return render_template('locations.html', form=form,form2=form2,form3=form3, locations=location)
+    return render_template('locations.html', form=form, form2=form2, form3=form3, locations=location)
 
 
 @main.route("/admin/measurement_types")
